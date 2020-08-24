@@ -1,4 +1,10 @@
 const tmi = require('tmi.js');
+
+const listaDeComandos = {
+  comandoUm: require('./comandos/comandoUm'),
+  comandoDois: require('./comandos/comandoDois'),
+};
+
 require('dotenv').config();
 
 // Definir opções de configuração
@@ -12,6 +18,7 @@ const opts = {
 
 // Cria um cliente tmi com  nossas opções
 const client = new tmi.client(opts);
+
 // intercepta mensagem do chat
 function mensagemChegou(alvo, contexto, mensagem, ehBot) {
   if (ehBot) {
@@ -19,12 +26,10 @@ function mensagemChegou(alvo, contexto, mensagem, ehBot) {
   } // se for mensagens do nosso bot ele não faz nada
 
   // remove espaço em branco da mensagem para verificar o comando
-  const nomeDoComando = mensagem.trim();
+  const [, nomeDoComando] = mensagem.trim().split(/^!/);
   // checando o nosso comando
-  if (nomeDoComando === '!comandoUM') {
-    client.say(alvo, `Rodando o comando ${nomeDoComando}`);
-  } else if (nomeDoComando === '!comandoDOIS') {
-    client.say(alvo, `Rodando o comando ${nomeDoComando}`);
+  if (typeof listaDeComandos[nomeDoComando] === 'function') {
+    listaDeComandos[nomeDoComando](client, alvo, nomeDoComando);
   } else {
     console.log(`* Não conheço o comando ${nomeDoComando}`);
   }

@@ -15,6 +15,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'class-methods-use-this': 'off',
+    'global-require': 'off',
     'new-cap': ['error', { newIsCapExceptions: ['tmi.client'] }],
     'import/extensions': [
       'error',
